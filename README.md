@@ -8,6 +8,21 @@
 ![Game](https://img.shields.io/badge/Slay_The_Spire_2-Mod-red.svg)
 ![Platform](https://img.shields.io/badge/Platform-Windows%20|%20macOS%20|%20Linux-lightgrey.svg)
 
+# This Repository Is No Longer Maintained
+
+This repository will most likely no longer be maintained.
+
+Due to real-life and work-related reasons, I no longer have the time to continue development, fix bugs, review pull requests, or pretend that I still understand this project.
+
+This project contains a large amount of AI-generated code, and this dumbass developer no longer wants to review it line by line.
+
+From now on, you are free to use this project however you want.
+
+Fork it, rewrite it, feed it to a dog, or do whatever else you like.
+
+The license has been changed to **CC0**.
+
+
 *A Slay the Spire 2 mod that increases the vanilla 4-player multiplayer lobby limit. Gather more friends and climb the Spire together!*
 
 </div>
