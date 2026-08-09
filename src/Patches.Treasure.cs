@@ -261,7 +261,7 @@ public static partial class ModEntry
 	[HarmonyPatch(typeof(TreasureRoomRelicSynchronizer), "PickRelicLocally")]
 	private static class TreasureRoomRelicSynchronizerSkipPatch
 	{
-		private static bool Prefix(TreasureRoomRelicSynchronizer __instance, int index)
+		private static bool Prefix(TreasureRoomRelicSynchronizer __instance, int? index)
 		{
 			if (index != SkipVoteIndex)
 			{
