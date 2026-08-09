@@ -48,7 +48,7 @@ internal static class SerializationMethods
 
 // ── LobbyPlayer SlotId ─────────────────────────────────────────────────
 
-[HarmonyPatch(typeof(LobbyPlayer), nameof(LobbyPlayer.Serialize))]
+[HarmonyPatch(typeof(StartRunLobbyPlayer), nameof(StartRunLobbyPlayer.Serialize))]
 internal static class LobbyPlayerSerializePatch
 {
 	private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
@@ -58,7 +58,7 @@ internal static class LobbyPlayerSerializePatch
 			nameof(LobbyPlayerSerializePatch));
 }
 
-[HarmonyPatch(typeof(LobbyPlayer), nameof(LobbyPlayer.Deserialize))]
+[HarmonyPatch(typeof(StartRunLobbyPlayer), nameof(StartRunLobbyPlayer.Deserialize))]
 internal static class LobbyPlayerDeserializePatch
 {
 	private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)

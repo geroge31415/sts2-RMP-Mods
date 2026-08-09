@@ -46,15 +46,9 @@ public static partial class ModEntry
 	}
 
 	// ── 能力数值缩放 ─────────────────────────────────────────────────────
-
-	[HarmonyPatch(typeof(MultiplayerScalingModel), nameof(MultiplayerScalingModel.ModifyPowerAmountGiven))]
-	private static class ModifyPowerScalingPatch
-	{
-		private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-		{
-			return PatchPlayersCountInScaling(instructions);
-		}
-	}
+	// v0.107.1 で MultiplayerScalingModel.ModifyPowerAmountGiven が削除された。
+	// ゲーム側がパワー数値のマルチプレイヤースケーリングを
+	// MultiplayerScalingModel 経由で行わなくなったため、パッチ不要。
 
 	/// <summary>
 	/// 通用 Transpiler：在 MultiplayerScalingModel 方法中，找到 _runState.Players.Count
