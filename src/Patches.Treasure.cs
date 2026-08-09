@@ -314,7 +314,7 @@ public static partial class ModEntry
 	[HarmonyPatch(typeof(TreasureRoomRelicSynchronizer), nameof(TreasureRoomRelicSynchronizer.OnPicked))]
 	private static class TreasureRoomRelicSynchronizerOnPickedSkipPatch
 	{
-		private static bool Prefix(TreasureRoomRelicSynchronizer __instance, Player player, int index)
+		private static bool Prefix(TreasureRoomRelicSynchronizer __instance, Player player, int? index)
 		{
 			// 模组协议通道: RmpSkipRelicGameAction 直接传入 index=-1，无需 255→-1 转换
 			List<RelicModel>? syncCurrentRelics = GetSyncCurrentRelics(__instance);
