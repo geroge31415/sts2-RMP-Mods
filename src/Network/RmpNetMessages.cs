@@ -24,6 +24,13 @@ public struct RmpConfigSyncMessage : INetMessage, IPacketSerializable
 	public readonly NetTransferMode Mode => NetTransferMode.Reliable;
 	public readonly LogLevel LogLevel => LogLevel.Info;
 
+	/// <summary>
+	/// v0.107.1 で INetMessage に追加されたプロパティ。
+	/// NetMessageBus.SetBufferMessages(true) 時にこのメッセージをバッファリングするかを決定する。
+	/// 設定同期メッセージはゲーム状態が整った後に処理されても問題ないため true を返す。
+	/// </summary>
+	public readonly bool ShouldBuffer => true;
+
 	public readonly void Serialize(PacketWriter writer)
 	{
 		writer.WriteInt(ProtocolVersion, 8);
