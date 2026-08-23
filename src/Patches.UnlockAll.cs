@@ -23,7 +23,7 @@ namespace RemoveMultiplayerPlayerLimit
 					// リセットして不正なエポック（開発中のキャラ等）を消去
 					AccessTools.Method(typeof(ProgressState), "ResetEpochs")?.Invoke(progress, null);
 
-					string[] safePrefixes = new[] { "IRONCLAD", "SILENT", "DEFECT", "REGENT", "NECROBINDER", "COLORLESS", "RELIC", "EVENT", "POTION", "DAILY", "CUSTOM", "NEOW", "ACT3" };
+					string[] safePrefixes = new[] { "IRONCLAD", "SILENT", "DEFECT", "REGENT", "NECROBINDER", "COLORLESS", "RELIC", "EVENT", "POTION", "DAILY", "CUSTOM", "NEOW", "ACT2", "ACT3", "UNDERDOCKS" };
 
 					foreach (var epochId in EpochModel.AllEpochIds)
 					{
