@@ -46,20 +46,25 @@ namespace RemoveMultiplayerPlayerLimit
 					}
 				}
 
-				progress.MaxMultiplayerAscension = 20;
+				progress.MaxMultiplayerAscension = 10;
 
-				if (progress.CharacterStats != null)
+				var allChars = MegaCrit.Sts2.Core.Models.ModelDb.AllCharacters;
+				var getStatsMethod = AccessTools.Method(typeof(ProgressState), "GetOrCreateCharacterStats");
+
+				if (allChars != null && getStatsMethod != null)
 				{
-					foreach (var kvp in progress.CharacterStats)
+					foreach (var character in allChars)
 					{
-						var charId = kvp.Key.ToString();
-						// 不正なキャラのAscensionを上げない
-						if (charId.Contains("AUTOMATON") || charId.Contains("AWAKENED") || charId.Contains("CHAMP")) 
+						// Skip known invalid characters just in case
+						string charIdStr = character.Id.ToString();
+						if (charIdStr.Contains("AUTOMATON") || charIdStr.Contains("AWAKENED") || charIdStr.Contains("CHAMP"))
 							continue;
-							
-						if (kvp.Value != null)
+
+						var stats = getStatsMethod.Invoke(progress, new object[] { character.Id });
+						if (stats != null)
 						{
-							kvp.Value.MaxAscension = 20;
+							var maxAscProp = AccessTools.PropertySetter(stats.GetType(), "MaxAscension");
+							maxAscProp?.Invoke(stats, new object[] { 10 });
 						}
 					}
 				}
