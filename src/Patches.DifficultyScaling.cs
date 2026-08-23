@@ -46,9 +46,19 @@ public static partial class ModEntry
 	}
 
 	// ── 能力数值缩放 ─────────────────────────────────────────────────────
-	// v0.107.1 で MultiplayerScalingModel.ModifyPowerAmountGiven が削除された。
-	// ゲーム側がパワー数値のマルチプレイヤースケーリングを
-	// MultiplayerScalingModel 経由で行わなくなったため、パッチ不要。
+	// v0.107.1 で計算ロジックが PowerModel.GetScaledAmountForMultiplayer に移動。
+	// combatState.Players.Count を取得した直後に GetEffectivePlayerCount を挿入し、
+	// 5人以上でもスケーリングが延伸するようにする。
+
+	[HarmonyPatch(typeof(MegaCrit.Sts2.Core.Models.PowerModel),
+		nameof(MegaCrit.Sts2.Core.Models.PowerModel.GetScaledAmountForMultiplayer))]
+	private static class PowerScalingPatch
+	{
+		private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+		{
+			return PatchPlayersCountAfterGetCount(instructions);
+		}
+	}
 
 	/// <summary>
 	/// 通用 Transpiler：在 MultiplayerScalingModel 方法中，找到 _runState.Players.Count
@@ -81,6 +91,50 @@ public static partial class ModEntry
 			{
 				yield return new CodeInstruction(OpCodes.Call, helper);
 				foundRunStateLoad = false;
+			}
+		}
+	}
+
+	/// <summary>
+	/// 汎用 Transpiler: get_Players() → get_Count() のパターンを検出し、
+	/// get_Count() の直後に GetEffectivePlayerCount を挿入する。
+	/// PowerModel.GetScaledAmountForMultiplayer 等、combatState.Players.Count を
+	/// 使用するメソッドに対応。
+	/// </summary>
+	private static IEnumerable<CodeInstruction> PatchPlayersCountAfterGetCount(IEnumerable<CodeInstruction> instructions)
+	{
+		MethodInfo helper = AccessTools.Method(typeof(ModEntry), nameof(GetEffectivePlayerCount));
+
+		bool foundGetPlayers = false;
+
+		foreach (CodeInstruction instruction in instructions)
+		{
+			yield return instruction;
+
+			if ((instruction.opcode == OpCodes.Callvirt || instruction.opcode == OpCodes.Call)
+				&& instruction.operand is MethodInfo mi)
+			{
+				if (mi.Name == "get_Players")
+				{
+					foundGetPlayers = true;
+					continue;
+				}
+
+				// get_Players() の直後の get_Count() を検出
+				if (foundGetPlayers
+					&& mi.Name == "get_Count"
+					&& mi.ReturnType == typeof(int))
+				{
+					yield return new CodeInstruction(OpCodes.Call, helper);
+					foundGetPlayers = false;
+					continue;
+				}
+			}
+
+			// get_Players() の直後が get_Count() でなければリセット
+			if (foundGetPlayers)
+			{
+				foundGetPlayers = false;
 			}
 		}
 	}
