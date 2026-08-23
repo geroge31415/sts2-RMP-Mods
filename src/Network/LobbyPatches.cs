@@ -36,13 +36,15 @@ internal static class StartRunLobbyConstructorPatch
 {
 	private static void Postfix(StartRunLobby __instance, INetGameService netService)
 	{
-		if (netService.Type == NetGameType.Host
-			&& __instance.MaxPlayers < ProtocolConfig.TargetPlayerLimit
-			&& LobbySync.MaxPlayersField != null)
+		if (netService.Type == NetGameType.Host && LobbySync.MaxPlayersField != null)
 		{
-			LobbySync.MaxPlayersField.SetValue(__instance, ProtocolConfig.TargetPlayerLimit);
+			int currentMax = (int)LobbySync.MaxPlayersField.GetValue(__instance)!;
+			if (currentMax < ProtocolConfig.TargetPlayerLimit)
+			{
+				LobbySync.MaxPlayersField.SetValue(__instance, ProtocolConfig.TargetPlayerLimit);
+			}
 		}
-		// 绑定模组协议通道到当前多人会话
+		
 		if (netService.Type is NetGameType.Host or NetGameType.Client)
 		{
 			RmpProtocol.Bind(netService);
@@ -50,7 +52,7 @@ internal static class StartRunLobbyConstructorPatch
 	}
 }
 
-// ── 动态同步 MaxPlayers：当玩家尝试加入时，确保 MaxPlayers 与当前设置一致 ──
+// ── 动态同步 MaxPlayers（当玩家尝试加入时，确保MaxPlayers 与当前设置一致） ──
 
 [HarmonyPatch(typeof(StartRunLobby), "OnConnectedToClientAsHost")]
 internal static class OnConnectedToClientAsHostPatch
@@ -65,12 +67,12 @@ internal static class HandleClientLobbyJoinRequestMessagePatch
 }
 
 /// <summary>
-/// MaxPlayers 同步逻辑 — 对外提供 <see cref="MaxPlayersField"/> 和 <see cref="SyncLobbyMaxPlayers"/>。
+/// MaxPlayers 同步逻辑。对外提供 <see cref="MaxPlayersField"/> 和 <see cref="SyncLobbyMaxPlayers"/>。
 /// </summary>
 internal static class LobbySync
 {
 	internal static readonly FieldInfo? MaxPlayersField =
-		AccessTools.Field(typeof(StartRunLobby), "<MaxPlayers>k__BackingField");
+		AccessTools.Field(typeof(StartRunLobby), "_maxPlayers");
 
 	internal static void SyncLobbyMaxPlayers(StartRunLobby lobby)
 	{
@@ -78,11 +80,14 @@ internal static class LobbySync
 		{
 			return;
 		}
-		if (lobby.MaxPlayers != ProtocolConfig.TargetPlayerLimit)
+		
+		int currentMax = (int)MaxPlayersField.GetValue(lobby)!;
+		if (currentMax != ProtocolConfig.TargetPlayerLimit)
 		{
 			MaxPlayersField.SetValue(lobby, ProtocolConfig.TargetPlayerLimit);
 			SteamLobbyHelper.TryUpdateMemberLimit(lobby.NetService, ProtocolConfig.TargetPlayerLimit);
 		}
+		
 		// 通过模组协议通道广播配置给所有客户端
 		RmpProtocol.BroadcastConfig(ProtocolConfig.TargetPlayerLimit);
 	}

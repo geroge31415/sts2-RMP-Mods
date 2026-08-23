@@ -653,7 +653,7 @@ public static partial class ModEntry
 		Dictionary<string, string> table = new Dictionary<string, string>();
 		try
 		{
-			using FileAccess file = FileAccess.Open(filePath, FileAccess.ModeFlags.Read);
+			using Godot.FileAccess file = Godot.FileAccess.Open(filePath, Godot.FileAccess.ModeFlags.Read);
 			if (file != null)
 			{
 				Dictionary<string, string>? parsed = JsonSerializer.Deserialize<Dictionary<string, string>>(file.GetAsText());

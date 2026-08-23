@@ -20,8 +20,25 @@ namespace RemoveMultiplayerPlayerLimit
 
 				if (EpochModel.AllEpochIds != null)
 				{
+					// リセットして不正なエポック（開発中のキャラ等）を消去
+					AccessTools.Method(typeof(ProgressState), "ResetEpochs")?.Invoke(progress, null);
+
+					string[] safePrefixes = new[] { "Ironclad", "Silent", "Defect", "Regent", "Necrobinder", "Colorless", "Relic", "Event", "Potion", "DailyRun", "CustomAndSeeds", "Neow", "Act3B" };
+
 					foreach (var epochId in EpochModel.AllEpochIds)
 					{
+						bool isSafe = false;
+						foreach (var prefix in safePrefixes)
+						{
+							if (epochId.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+							{
+								isSafe = true;
+								break;
+							}
+						}
+						
+						if (!isSafe) continue;
+
 						progress.RevealEpoch(epochId);
 						progress.UnlockSlot(epochId);
 						if (obtainEpochOverride != null)
@@ -35,11 +52,16 @@ namespace RemoveMultiplayerPlayerLimit
 
 				if (progress.CharacterStats != null)
 				{
-					foreach (var stat in progress.CharacterStats.Values)
+					foreach (var kvp in progress.CharacterStats)
 					{
-						if (stat != null)
+						var charId = kvp.Key.ToString();
+						// 不正なキャラのAscensionを上げない
+						if (charId.Contains("AUTOMATON") || charId.Contains("AWAKENED") || charId.Contains("CHAMP")) 
+							continue;
+							
+						if (kvp.Value != null)
 						{
-							stat.MaxAscension = 20;
+							kvp.Value.MaxAscension = 20;
 						}
 					}
 				}
