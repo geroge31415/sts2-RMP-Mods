@@ -15,7 +15,7 @@ namespace RemoveMultiplayerPlayerLimit
 				var progress = __instance.Progress;
 				if (progress == null) return;
 
-				object obtainedEnum = Enum.Parse(AccessTools.TypeByName("MegaCrit.Sts2.Core.Saves.EpochState"), "Obtained");
+				object revealedEnum = Enum.Parse(AccessTools.TypeByName("MegaCrit.Sts2.Core.Saves.EpochState"), "Revealed");
 				var obtainEpochOverride = AccessTools.Method(typeof(ProgressState), "ObtainEpochOverride");
 
 				if (EpochModel.AllEpochIds != null)
@@ -23,7 +23,7 @@ namespace RemoveMultiplayerPlayerLimit
 					// リセットして不正なエポック（開発中のキャラ等）を消去
 					AccessTools.Method(typeof(ProgressState), "ResetEpochs")?.Invoke(progress, null);
 
-					string[] safePrefixes = new[] { "Ironclad", "Silent", "Defect", "Regent", "Necrobinder", "Colorless", "Relic", "Event", "Potion", "DailyRun", "CustomAndSeeds", "Neow", "Act3B" };
+					string[] safePrefixes = new[] { "IRONCLAD", "SILENT", "DEFECT", "REGENT", "NECROBINDER", "COLORLESS", "RELIC", "EVENT", "POTION", "DAILY", "CUSTOM", "NEOW", "ACT3" };
 
 					foreach (var epochId in EpochModel.AllEpochIds)
 					{
@@ -39,11 +39,9 @@ namespace RemoveMultiplayerPlayerLimit
 						
 						if (!isSafe) continue;
 
-						progress.RevealEpoch(epochId);
-						progress.UnlockSlot(epochId);
 						if (obtainEpochOverride != null)
 						{
-							obtainEpochOverride.Invoke(progress, new object[] { epochId, obtainedEnum });
+							obtainEpochOverride.Invoke(progress, new object[] { epochId, revealedEnum });
 						}
 					}
 				}
