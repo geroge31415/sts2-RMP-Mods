@@ -20,10 +20,10 @@ namespace RemoveMultiplayerPlayerLimit
 
 				if (EpochModel.AllEpochIds != null)
 				{
-					// „É™„Çª„ÉÉ„Éà„Åó„Å¶‰∏çÊ≠£„Å™„Ç®„Éù„ÉÉ„ÇØÔºàÈñãÁô∫‰∏≠„ÅÆ„Ç≠„É£„É©Á≠âÔºâ„ÇíÊ∂àÂéª
+					// ÉäÉZÉ`EÇµÇƒïsê≥Ç»ÉGÉ|ÉbÉNEäJî≠íÜÇÃÉLÉÉÉâìôÅjÇè¡ãé
 					AccessTools.Method(typeof(ProgressState), "ResetEpochs")?.Invoke(progress, null);
 
-					string[] safePrefixes = new[] { "IRONCLAD", "SILENT", "DEFECT", "REGENT", "NECROBINDER", "COLORLESS", "RELIC", "EVENT", "POTION", "DAILY", "CUSTOM", "NEOW", "ACT2", "ACT3", "UNDERDOCKS" };
+					string[] safePrefixes = new[] { "IRONCLAD", "SILENT", "DEFECT", "REGENT", "NECROBINDER", "COLORLESS", "RELIC", "EVENT", "POTION", "DAILY", "CUSTOM", "NEOW", "ACT2", "ACT3", "UNDERDOCKS", "DARV", "OROBAS" };
 
 					foreach (var epochId in EpochModel.AllEpochIds)
 					{
@@ -68,6 +68,13 @@ namespace RemoveMultiplayerPlayerLimit
 						}
 					}
 				}
+                
+                // Clear pending unlock
+                var pendingProp = AccessTools.PropertySetter(progress.GetType(), "PendingCharacterUnlock");
+				if (pendingProp != null)
+				{
+					pendingProp.Invoke(progress, new object[] { Activator.CreateInstance(AccessTools.TypeByName("MegaCrit.Sts2.Core.Models.ModelId")) });
+				}
 
 				AccessTools.Method(typeof(SaveManager), "SaveProgressFile")?.Invoke(__instance, null);
 			}
@@ -79,13 +86,22 @@ namespace RemoveMultiplayerPlayerLimit
 	}
 }
 
+[HarmonyPatch(typeof(MegaCrit.Sts2.Core.Saves.ProgressState), "GrantNextUnlock")]
+internal static class ProgressStateGrantNextUnlockPatch
+{
+    private static bool Prefix(ref string? __result)
+    {
+        __result = null!;
+        return false; // Skip original execution
+    }
+}
 
-	[HarmonyPatch(typeof(MegaCrit.Sts2.Core.Saves.ProgressState), "GrantNextUnlock")]
-	internal static class ProgressStateGrantNextUnlockPatch
-	{
-		private static bool Prefix(ref string? __result)
-		{
-			__result = null;
-			return false; // Skip original execution
-		}
-	}
+[HarmonyPatch(typeof(MegaCrit.Sts2.Core.Saves.ProgressState), "get_TotalUnlocks")]
+internal static class ProgressStateTotalUnlocksPatch
+{
+    private static bool Prefix(ref int __result)
+    {
+        __result = 999999;
+        return false; // Skip original execution
+    }
+}
