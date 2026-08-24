@@ -37,7 +37,7 @@ public static partial class ModEntry
 
 	private const float MinRelicHolderYStep = 120f;
 
-	// ── 内部常量：跳过投票的逻辑标识（仅用于模组内部，不再经过网络传输） ──
+	// 笏笏 蜀・Κ蟶ｸ驥擾ｼ夊ｷｳ霑・兜逾ｨ逧・ｻ霎第�・ｯ・ｼ井ｻ・畑莠取ｨ｡扈・・驛ｨ・御ｸ榊・扈剰ｿ・ｽ醍ｻ應ｼ�霎難ｼ・笏笏
 	private const int SkipVoteIndex = -1;
 
 	private static readonly Dictionary<NTreasureRoomRelicCollection, NChoiceSelectionSkipButton> TreasureSkipButtons = new Dictionary<NTreasureRoomRelicCollection, NChoiceSelectionSkipButton>();
@@ -76,7 +76,7 @@ public static partial class ModEntry
 
 	private static readonly HashSet<TreasureRoomRelicSynchronizer> TreasureLocalSkipLockedStates = new HashSet<TreasureRoomRelicSynchronizer>();
 
-	// ── Holder 扩展 & 布局 ─────────────────────────────────────────────────
+	// 笏笏 Holder 謇ｩ螻・& 蟶・ｱ 笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏
 
 	[HarmonyPatch(typeof(NTreasureRoomRelicCollection), nameof(NTreasureRoomRelicCollection.InitializeRelics))]
 	private static class NTreasureRoomRelicCollectionInitializePatch
@@ -201,9 +201,9 @@ public static partial class ModEntry
 		}
 	}
 
-	// ── 跳过按钮 ──────────────────────────────────────────────────────────
+	// 笏笏 霍ｳ霑・潔髓ｮ 笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏
 
-	/// <summary>创建跳过按钮并挂载到遗物选择 UI。</summary>
+	/// <summary>蛻帛ｻｺ霍ｳ霑・潔髓ｮ蟷ｶ謖りｽｽ蛻ｰ驕礼黄騾画叫 UI縲・/summary>
 	[HarmonyPatch(typeof(NTreasureRoomRelicCollection), "_Ready")]
 	private static class NTreasureRoomRelicCollectionReadyPatch
 	{
@@ -213,7 +213,7 @@ public static partial class ModEntry
 		}
 	}
 
-	/// <summary>每次 InitializeRelics 后同步按钮可见性与启用状态。</summary>
+	/// <summary>豈乗ｬ｡ InitializeRelics 蜷主酔豁･謖蛾聴蜿ｯ隗∵ｧ荳主星逕ｨ迥ｶ諤√・/summary>
 	[HarmonyPatch(typeof(NTreasureRoomRelicCollection), nameof(NTreasureRoomRelicCollection.InitializeRelics))]
 	private static class NTreasureRoomRelicCollectionInitializeSkipPatch
 	{
@@ -230,7 +230,7 @@ public static partial class ModEntry
 		}
 	}
 
-	/// <summary>跟随 SetSelectionEnabled 同步跳过按钮的启用状态。</summary>
+	/// <summary>霍滄囂 SetSelectionEnabled 蜷梧ｭ･霍ｳ霑・潔髓ｮ逧・星逕ｨ迥ｶ諤√・/summary>
 	[HarmonyPatch(typeof(NTreasureRoomRelicCollection), nameof(NTreasureRoomRelicCollection.SetSelectionEnabled))]
 	private static class NTreasureRoomRelicCollectionSetSelectionEnabledPatch
 	{
@@ -244,7 +244,7 @@ public static partial class ModEntry
 		}
 	}
 
-	/// <summary>节点退出场景树时清理按钮字典，防止内存泄漏。</summary>
+	/// <summary>闃らせ騾蜃ｺ蝨ｺ譎ｯ譬第慮貂・炊謖蛾聴蟄怜・・碁亟豁｢蜀・ｭ俶ｳ・ｼ上・/summary>
 	[HarmonyPatch(typeof(NTreasureRoomRelicCollection), "_ExitTree")]
 	private static class NTreasureRoomRelicCollectionExitPatch
 	{
@@ -255,9 +255,7 @@ public static partial class ModEntry
 	}
 
 	/// <summary>
-	/// 拦截 PickRelicLocally 仅处理跳过（index == SkipVoteIndex）。
-	/// 正常遗物选择（index >= 0）放行给原版处理。
-	/// </summary>
+	/// 諡ｦ謌ｪ PickRelicLocally 莉・､・炊霍ｳ霑・ｼ・ndex == SkipVoteIndex・峨・	/// 豁｣蟶ｸ驕礼黄騾画叫・・ndex >= 0・画叛陦檎ｻ吝次迚亥､・炊縲・	/// </summary>
 	[HarmonyPatch(typeof(TreasureRoomRelicSynchronizer), "PickRelicLocally")]
 	private static class TreasureRoomRelicSynchronizerSkipPatch
 	{
@@ -286,7 +284,7 @@ public static partial class ModEntry
 			TreasureLocalVotePendingStates.Add(__instance);
 			TreasureLocalSkipLockedStates.Add(__instance);
 			SetSyncPredictedVote(__instance, SkipVoteIndex);
-			// 通过模组协议通道的独立动作类型发送跳过投票，不侵入官方 NetPickRelicAction 协议空间
+			// 騾夊ｿ・ｨ｡扈・刻隶ｮ騾夐％逧・峡遶句勘菴懃ｱｻ蝙句書騾∬ｷｳ霑・兜逾ｨ・御ｸ堺ｾｵ蜈･螳俶婿 NetPickRelicAction 蜊剰ｮｮ遨ｺ髣ｴ
 			actionQueue.RequestEnqueue(new RmpSkipRelicGameAction(player));
 			InvokeVotesChanged(__instance);
 			return false;
@@ -316,7 +314,7 @@ public static partial class ModEntry
 	{
 		private static bool Prefix(TreasureRoomRelicSynchronizer __instance, Player player, int? index)
 		{
-			// 模组协议通道: RmpSkipRelicGameAction 直接传入 index=-1，无需 255→-1 转换
+			// 讓｡扈・刻隶ｮ騾夐％: RmpSkipRelicGameAction 逶ｴ謗･莨�蜈･ index=-1・梧裏髴 255竊・1 霓ｬ謐｢
 			List<RelicModel>? syncCurrentRelics = GetSyncCurrentRelics(__instance);
 			IPlayerCollection? syncPlayerCollection = GetSyncPlayerCollection(__instance);
 			List<int?>? syncVotes = GetSyncVotes(__instance);
@@ -365,7 +363,7 @@ public static partial class ModEntry
 		}
 	}
 
-	// ── 事件处理 ──────────────────────────────────────────────────────────
+	// 笏笏 莠倶ｻｶ螟・炊 笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏
 
 	private static void OnTreasureSkipReleased(NButton button)
 	{
@@ -382,7 +380,7 @@ public static partial class ModEntry
 		synchronizer.PickRelicLocally(SkipVoteIndex);
 	}
 
-	// ── 辅助方法 ──────────────────────────────────────────────────────────
+	// 笏笏 霎・勧譁ｹ豕・笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏
 
 	private static List<NTreasureRoomRelicHolder>? GetHoldersInUse(NTreasureRoomRelicCollection collection)
 		=> HoldersInUseField?.GetValue(collection) as List<NTreasureRoomRelicHolder>;
@@ -564,28 +562,8 @@ public static partial class ModEntry
 
 	private static bool EnsureTreasureSkipButton(NTreasureRoomRelicCollection collection, out NChoiceSelectionSkipButton? button)
 	{
-		if (TreasureSkipButtons.TryGetValue(collection, out button) && button != null)
-		{
-			return true;
-		}
-		string scenePath = SceneHelper.GetScenePath("ui/choice_selection_skip_button");
-		PackedScene? scene = PreloadManager.Cache.GetScene(scenePath);
-		if (scene == null)
-		{
-			Log.Warn($"Failed to load skip button scene: {scenePath}");
-			button = null;
-			return false;
-		}
-		button = scene.Instantiate<NChoiceSelectionSkipButton>(PackedScene.GenEditState.Disabled);
-		button.Name = "TreasureSkipButton";
-		button.Position = new Vector2(0f, 420f);
-		MegaLabel? label = button.GetNodeOrNull<MegaLabel>("Label");
-		label?.SetTextAutoSize(GetLocalizedText("TREASURE_RELIC_SKIP_BUTTON", "Skip"));
-		button.Connect(NClickableControl.SignalName.Released, Callable.From<NButton>(OnTreasureSkipReleased));
-		collection.AddChild(button);
-		collection.Connect(Control.SignalName.Resized, Callable.From(() => UpdateSkipButtonLayout(collection)));
-		TreasureSkipButtons[collection] = button;
-		return true;
+		button = null;
+		return false;
 	}
 
 	private static void UpdateSkipButtonLayout(NTreasureRoomRelicCollection collection)
@@ -605,7 +583,7 @@ public static partial class ModEntry
 		button.GlobalPosition = new Vector2(viewportSize.X - buttonSize.X - marginX, viewportSize.Y - buttonSize.Y - marginY);
 	}
 
-	// ── 本地化 ────────────────────────────────────────────────────────────
+	// 笏笏 譛ｬ蝨ｰ蛹・笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏笏
 
 	private static string GetLocalizedText(string key, string fallbackText)
 	{
@@ -694,7 +672,6 @@ public static partial class ModEntry
 			List<RelicModel>? currentRelics = GetSyncCurrentRelics(__instance);
 			if (currentRelics != null)
 			{
-				// 1. 修复空池导致的卡死问题（多人耗尽遗物池时兜底为 草莓）
 				bool hasChanges = false;
 				for (int i = 0; i < currentRelics.Count; i++)
 				{
@@ -716,3 +693,17 @@ public static partial class ModEntry
 		}
 	}
 }
+
+	[HarmonyPatch(typeof(MegaCrit.Sts2.Core.Nodes.Rooms.NTreasureRoom), "OnActiveScreenChanged")]
+	internal static class NTreasureRoomOnActiveScreenChangedPatch
+	{
+		private static void Postfix(MegaCrit.Sts2.Core.Nodes.Rooms.NTreasureRoom __instance)
+		{
+			bool isRelicCollectionOpen = (bool)AccessTools.Field(typeof(MegaCrit.Sts2.Core.Nodes.Rooms.NTreasureRoom), "_isRelicCollectionOpen").GetValue(__instance)!;
+			if (isRelicCollectionOpen)
+			{
+				MegaCrit.Sts2.Core.Nodes.CommonUi.NProceedButton proceedButton = (MegaCrit.Sts2.Core.Nodes.CommonUi.NProceedButton)AccessTools.Field(typeof(MegaCrit.Sts2.Core.Nodes.Rooms.NTreasureRoom), "_proceedButton").GetValue(__instance)!;
+				proceedButton?.Disable();
+			}
+		}
+	}

@@ -78,3 +78,14 @@ namespace RemoveMultiplayerPlayerLimit
 		}
 	}
 }
+
+	[HarmonyPatch(typeof(MegaCrit.Sts2.Core.Saves.ProgressState), "TryObtainEpochPostRun")]
+	internal static class ProgressStateTryObtainEpochPostRunPatch
+	{
+		private static bool Prefix(ref bool __result, out MegaCrit.Sts2.Core.Timeline.EpochModel epoch)
+		{
+			epoch = null!;
+			__result = false;
+			return false; // Skip original execution
+		}
+	}
