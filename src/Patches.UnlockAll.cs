@@ -79,13 +79,13 @@ namespace RemoveMultiplayerPlayerLimit
 	}
 }
 
-	[HarmonyPatch(typeof(MegaCrit.Sts2.Core.Saves.ProgressState), "TryObtainEpochPostRun")]
-	internal static class ProgressStateTryObtainEpochPostRunPatch
+
+	[HarmonyPatch(typeof(MegaCrit.Sts2.Core.Saves.ProgressState), "GrantNextUnlock")]
+	internal static class ProgressStateGrantNextUnlockPatch
 	{
-		private static bool Prefix(ref bool __result, out MegaCrit.Sts2.Core.Timeline.EpochModel epoch)
+		private static bool Prefix(ref string? __result)
 		{
-			epoch = null!;
-			__result = false;
+			__result = null;
 			return false; // Skip original execution
 		}
 	}
