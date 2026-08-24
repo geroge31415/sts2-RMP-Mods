@@ -92,3 +92,25 @@ internal static class LobbySync
 		RmpProtocol.BroadcastConfig(ProtocolConfig.TargetPlayerLimit);
 	}
 }
+
+[HarmonyPatch(typeof(StartRunLobby), MethodType.Constructor,
+    typeof(GameMode), typeof(INetGameService), typeof(IStartRunLobbyListener), typeof(MegaCrit.Sts2.Core.Daily.TimeServerResult), typeof(int))]
+internal static class StartRunLobbyConstructorPatch2
+{
+    private static void Postfix(StartRunLobby __instance, INetGameService netService)
+    {
+        if (netService.Type == NetGameType.Host && LobbySync.MaxPlayersField != null)
+        {
+            int currentMax = (int)LobbySync.MaxPlayersField.GetValue(__instance)!;
+            if (currentMax < ProtocolConfig.TargetPlayerLimit)
+            {
+                LobbySync.MaxPlayersField.SetValue(__instance, ProtocolConfig.TargetPlayerLimit);
+            }
+        }
+        
+        if (netService.Type is NetGameType.Host or NetGameType.Client)
+        {
+            RmpProtocol.Bind(netService);
+        }
+    }
+}
