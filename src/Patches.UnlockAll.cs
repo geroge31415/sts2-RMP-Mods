@@ -20,25 +20,14 @@ namespace RemoveMultiplayerPlayerLimit
 
 				if (EpochModel.AllEpochIds != null)
 				{
-					// リセチEして不正なエポックE開発中のキャラ等）を消去
+					// 全エポックをリセットしてからRevealed状態で再登録する
 					AccessTools.Method(typeof(ProgressState), "ResetEpochs")?.Invoke(progress, null);
 
-					string[] safePrefixes = new[] { "IRONCLAD", "SILENT", "DEFECT", "REGENT", "NECROBINDER", "COLORLESS", "RELIC", "EVENT", "POTION", "DAILY", "CUSTOM", "NEOW", "ACT2", "ACT3", "UNDERDOCKS" };
-
+					// AllEpochIdsに含まれる全てのエポックをRevealed状態にする
+					// フィルタなし：ゲームが認識している全エポックを解放済みにすることで
+					// GrantNextUnlockが未取得のエポックを見つけられなくなり、ソフトロックを防ぐ
 					foreach (var epochId in EpochModel.AllEpochIds)
 					{
-						bool isSafe = false;
-						foreach (var prefix in safePrefixes)
-						{
-							if (epochId.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
-							{
-								isSafe = true;
-								break;
-							}
-						}
-						
-						if (!isSafe) continue;
-
 						if (obtainEpochOverride != null)
 						{
 							obtainEpochOverride.Invoke(progress, new object[] { epochId, revealedEnum });
