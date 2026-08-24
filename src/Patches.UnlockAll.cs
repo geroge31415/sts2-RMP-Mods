@@ -20,10 +20,10 @@ namespace RemoveMultiplayerPlayerLimit
 
 				if (EpochModel.AllEpochIds != null)
 				{
-					// リセチEして不正なエポックE開発中のキャラ等）を消去
+					// 繝ｪ繧ｻ繝・縺励※荳肴ｭ｣縺ｪ繧ｨ繝昴ャ繧ｯE髢狗匱荳ｭ縺ｮ繧ｭ繝｣繝ｩ遲会ｼ峨ｒ豸亥悉
 					AccessTools.Method(typeof(ProgressState), "ResetEpochs")?.Invoke(progress, null);
 
-					string[] safePrefixes = new[] { "IRONCLAD", "SILENT", "DEFECT", "REGENT", "NECROBINDER", "COLORLESS", "RELIC", "EVENT", "POTION", "DAILY", "CUSTOM", "NEOW", "ACT2", "ACT3", "UNDERDOCKS", "DARV", "OROBAS" };
+					string[] safePrefixes = new[] { "IRONCLAD", "SILENT", "DEFECT", "REGENT", "NECROBINDER", "COLORLESS", "RELIC", "EVENT", "POTION", "DAILY", "CUSTOM", "NEOW", "ACT2", "ACT3", "UNDERDOCKS" };
 
 					foreach (var epochId in EpochModel.AllEpochIds)
 					{
